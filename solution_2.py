@@ -3,7 +3,7 @@
 class RingBuffer:
     """
     Буфер на списке проинициалилзирован сразу, но доступ к элементам закрыт пока
-    self.__length == 0
+    self.length == 0
     Элементы списка перезаписываются с начала по переполниии. Сложность операций
     на буфере O(1)
 
@@ -18,47 +18,47 @@ class RingBuffer:
     """
 
     def __init__(self, size=1):
-        self.__size = size
+        self.size = size
         self.__start = 0
         self.__end = 0
         self.__buffer = [None] * size
-        self.__length = 0
+        self.length = 0
 
     # добавить элемент
     def add(self, x):
         self.__buffer[self.__end] = x
-        self.__end = (self.__end + 1) % self.__size
-        if self.__start + 1 == self.__end and self.__length == self.__size:
-            self.__start = (self.__start + 1) % self.__size
-        if self.__length < self.__size:
-            self.__length += 1
+        self.__end = (self.__end + 1) % self.size
+        if self.__start + 1 == self.__end and self.length == self.size:
+            self.__start = (self.__start + 1) % self.size
+        if self.length < self.size:
+            self.length += 1
 
     # удалить элемент
     def remove(self):
-        if self.__length == 0:
+        if self.length == 0:
             raise StopIteration("buffer index out of range")
-        self.__start = (self.__start + 1) % self.__size
-        self.__length -= 1
+        self.__start = (self.__start + 1) % self.size
+        self.length -= 1
 
     # вернуть и удалить элемент
     def pop(self):
-        if self.__length == 0:
+        if self.length == 0:
             raise StopIteration("buffer index out of range")
         x = self.__buffer[self.__start]
-        self.__start = (self.__start + 1) % self.__size
-        self.__length -= 1
+        self.__start = (self.__start + 1) % self.size
+        self.length -= 1
         return x
 
     # вернуть текущий или на некотором расстоянии элемент
     def get(self, num=-1):
-        if self.__length == 0:
+        if self.length == 0:
             raise StopIteration("buffer index out of range")
         if num == -1:
             num = self.__start
-        elif num >= self.__length or num < 0:
+        elif num >= self.length or num < 0:
             raise StopIteration("buffer index out of range")
         else:
-            num = (num + self.__start) % self.__size
+            num = (num + self.__start) % self.size
         return self.__buffer[num]
 
 
@@ -88,29 +88,29 @@ class RingNodeBuffer:
 
     def __init__(self, size=1):
         self.__head = None
-        self.__length = 0
-        self.__size = size
+        self.length = 0
+        self.size = size
         self.__tail = self.__head
 
     def add(self, value):
-        if self.__length == self.__size:
+        if self.length == self.size:
             self.__head = self.__head.next
-            self.__length -= 1
+            self.length -= 1
         if self.__head is None:
             self.__head = self.__Node(value)
             self.__tail = self.__head
-            self.__length = 1
+            self.length = 1
         else:
             self.__tail.next = self.__Node(value)
             self.__tail = self.__tail.next
-            self.__length += 1
+            self.length += 1
 
     def remove(self):
         if self.__head is None:
             raise BufferError("buffer is empty")
-        self.__length -= 1
+        self.length -= 1
         self.__head = self.__head.next
-        if self.__length == 0:
+        if self.length == 0:
             self.__tail = None
 
     def get(self):
